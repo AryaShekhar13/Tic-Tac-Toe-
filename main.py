@@ -32,8 +32,23 @@ def Valid(location):
         return True
     else: 
         return False
+
+def Check_win(board,symbol):
+    #row check
+    for row in range(3):
+        if board[row][0]==board[row][1]==board[row][2]==symbol:
+            return True
+    #coloumn check
+    for i in range(3):
+        if board[0][i]==board[1][i]==board[2][i]==symbol:
+            return True
+    #diagonal check
+    if board[0][0]==board[1][1]==board[2][2]==symbol:
+        return True
+    if board[0][2]==board[1][1]==board[2][0]==symbol:
+        return True
+    else: return False
         
-    
 GameOver = False
 
 print("1.Play with a Friend\n")
@@ -82,11 +97,13 @@ Count = 0
 Player1_Turn = True
 Player2_Turn = False
 Comp = False
+Result_declared = False
 if choice1 == "2": Comp = False
 
 print("Choose location to enter:")
 
 while GameOver != True:
+
     if Count%2 == 0: 
         Player1_Turn = True
         Player2_Turn = False
@@ -94,8 +111,10 @@ while GameOver != True:
         Player2_Turn = True
         Player1_Turn = False
     location = input()
+
     if Player1_Turn == True:
         print("Player1:\n")
+        
         if Valid(location) == True:
             row,col = board_map[location]
             board[row][col] = Player1_symbol
@@ -107,11 +126,17 @@ while GameOver != True:
         else:
             print("Choose a different position!")
 
+        if Check_win(board,Player1_symbol) == True:
+            print("Player1 Won!")
+            Result_declared = True
+            break
+
         if not positions_allowed:
             GameOver = True
 
     if Player2_Turn == True:
-        print("Player1:\n")
+        print("Player2:\n")
+
         if Valid(location) == True:
             row,col = board_map[location]
             board[row][col] = Player2_symbol
@@ -123,5 +148,12 @@ while GameOver != True:
         else:
             print("Choose a different position!")
 
+        if Check_win(board,Player2_symbol) == True:
+                print("Player2 Won!")
+                Result_declared = True
+                break
+
         if not positions_allowed:
             GameOver = True
+
+if GameOver == True and Result_declared == False: print("Tie")
